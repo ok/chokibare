@@ -84,7 +84,7 @@ test(
 )
 
 test(
-  'F4 a watch on a missing path neither throws nor errors nor fires (I-1 canary) → DV11',
+  'F4 a watch on a missing path neither throws nor errors nor fires (bare-fs#51 canary) → DV11',
   bare,
   async (t) => {
     const dir = await tmp(t)
@@ -98,7 +98,7 @@ test(
     }
     if (threw) {
       t.fail(
-        'bare-fs now throws on a missing path: I-1 is fixed upstream — gate needsVerification() by version'
+        'bare-fs now throws on a missing path: holepunchto/bare-fs#51 is fixed — gate needsVerification() by version'
       )
       return
     }

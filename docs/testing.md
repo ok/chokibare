@@ -53,7 +53,7 @@ as unsupported (DV11) and the harness's `canUseRecursiveWatch` says no.
 
 Windows needed two things the local runs could not show: the write-burst case is skipped under Bare
 there (a burst overflows libuv's 4 KB ReadDirectoryChangesW buffer, libuv passes a NULL filename and
-bare-fs crashes on it: bare-fs issue 2 in the reproduction repo), and watch paths are resolved with
+bare-fs crashes on it: [holepunchto/bare-fs#52](https://github.com/holepunchto/bare-fs/issues/52)), and watch paths are resolved with
 `realpathSync.native` on Node (the runner's temp directory is an 8.3 short name; libuv's fs-event
 assertion fires when the callback's long name does not share the watched spelling — the same
 assertion that has kept chokidar's own CI red).

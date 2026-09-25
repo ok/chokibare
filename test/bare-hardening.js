@@ -188,8 +188,8 @@ s.test(
 )
 
 // Under Bare on Windows a burst overflows libuv's 4 KB ReadDirectoryChangesW buffer, libuv passes a
-// NULL filename, and bare-fs calls strlen() on it: the process dies (bare-fs issue I-2 in the
-// reproduction repo; CI run 36120702505 died exactly here). Re-enable when a fixed bare-fs ships.
+// NULL filename, and bare-fs calls strlen() on it: the process dies (holepunchto/bare-fs#52; CI run
+// 36120702505 died exactly here). Re-enable when a fixed bare-fs ships.
 s.test(
   'M6 a write burst with awaitWriteFinish settles to one change with the final size',
   { skip: isBare && isWindows },
