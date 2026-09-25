@@ -47,3 +47,6 @@ which is how the port is verified:
 ```
 CHOKIBARE_ORACLE=/path/to/chokidar-upstream npx brittle-node "test/*.js"
 ```
+
+`docs/testing.md` explains the method, the recorded numbers per platform and runtime, and the
+Docker scripts for Linux (`scripts/linux-run.sh`, `scripts/linux-enospc.sh`).

@@ -128,10 +128,10 @@ test('inotify: growth already explained by matched new keys is not credited to t
 
 test('inotify: take()/release() budget and facts()', (t) => {
   inotify._reset({ limit: inotify.RESERVE + 2 })
-  const linux = require('../lib/bare-runtime').platform === 'linux'
+  const gated = inotify.needsVerification() // only Bare on Linux budgets; Node reports ENOSPC itself
   t.ok(inotify.take())
   t.ok(inotify.take())
-  t.is(inotify.take(), !linux, 'third arm exceeds limit − reserve on Linux; elsewhere no budget')
+  t.is(inotify.take(), !gated, 'third arm exceeds limit − reserve where the budget applies')
   inotify.release()
   t.ok(inotify.take())
   t.is(inotify.facts().reserve, inotify.RESERVE)
