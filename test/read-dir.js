@@ -146,6 +146,7 @@ test('read-dir: a circular symlink is a warn, not an error', { skip: isWindows }
 
 test('read-dir: validation matches readdirp', async (t) => {
   await t.exception(() => readDir(''), /root argument is required/)
-  await t.exception(() => readDir(42), /must be a string/)
+  // a TypeError counts as "native" for brittle; .all() keeps it from being rethrown
+  await t.exception.all(() => readDir(42), /must be a string/)
   await t.exception(() => readDir('.', { type: 'bogus' }), /Invalid type/)
 })
