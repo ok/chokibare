@@ -5,7 +5,6 @@
 /*! chokidar - MIT License (c) 2012 Paul Miller (paulmillr.com) */
 const rt = require('./lib/bare-runtime')
 const EventEmitter = require('events') // rt: S4
-const { realpathSync } = require('fs') // rt: S1
 const { readdir } = require('fs/promises') // rt: S2
 const sp = require('path') // rt: S3
 const { readDir } = require('./lib/read-dir') // rt: S13
@@ -501,7 +500,7 @@ class FSWatcher extends EventEmitter {
         try {
           // macOS commonly exposes /var through the /private/var symlink. Cache
           // the root projection so descendants avoid a realpath syscall each.
-          const realPath = realpathSync(absoluteCandidate) // rt: S12
+          const realPath = rt.realpathNative(absoluteCandidate) // rt: S12
           pathAliases.set(absoluteCandidate, realPath)
           return realPath !== absoluteCandidate && canonical(realPath, candidateStats)
         } catch {
