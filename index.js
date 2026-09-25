@@ -9,7 +9,6 @@ const { readdir } = require('fs/promises') // rt: S2
 const sp = require('path') // rt: S3
 const { readDir } = require('./lib/read-dir') // rt: S13
 const { selectBackend, nativeResourceCountForTests } = require('./lib/backend')
-const inotify = require('./lib/inotify')
 const { EventPolicy } = require('./lib/policy')
 const { ObservationEngine } = require('./lib/reconcile')
 const {
@@ -719,7 +718,7 @@ function watch(paths, options = {}) {
 
 // chokibare: process-wide facts for logging and tests. Not part of chokidar's API.
 function facts() {
-  return { nativeWatches: nativeResourceCountForTests(), inotify: inotify.facts() }
+  return { nativeWatches: nativeResourceCountForTests() }
 }
 
 module.exports = { watch, FSWatcher, facts } // rt: S16

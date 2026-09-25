@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "bare-events": "^2.9.2",
-    "bare-fs": "^4.8.1",
+    "bare-fs": "^4.8.2",
     "bare-os": "^3.9.3",
     "bare-path": "^3.1.2"
   },

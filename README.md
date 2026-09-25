@@ -32,15 +32,11 @@ If chokidar has saved you time, please consider
 
 0.1.0 — the first release. The port of chokidar v6 (`74adf65`) is complete; its own test suites
 pass against chokibare on macOS, Linux and Windows, under Bare and under Node (`docs/testing.md`
-has the numbers). Two bare-fs defects limit what a watcher can do under Bare today, and chokibare
-works around the one it can:
-
-- [bare-fs#51](https://github.com/holepunchto/bare-fs/issues/51): a failed `fs.watch()` is a
-  silent dead handle. On Linux chokibare verifies every arm against the kernel and reports the
-  dead ones as `ENOSPC`.
-- [bare-fs#52](https://github.com/holepunchto/bare-fs/issues/52): on Windows a burst of changes
-  crashes the process. No workaround is possible in JavaScript; **do not use chokibare under Bare on
-  Windows in production until that is fixed.**
+has the numbers). Two bare-fs defects that limited a watcher under Bare — a failed `fs.watch()` returning a dead
+handle ([bare-fs#51](https://github.com/holepunchto/bare-fs/issues/51)) and a crash on a burst of
+changes on Windows ([bare-fs#52](https://github.com/holepunchto/bare-fs/issues/52)) — were fixed
+in bare-fs 4.8.2, which chokibare requires. The reproductions live in
+[ok/bare-fs-watch-repros](https://github.com/ok/bare-fs-watch-repros).
 
 See UPSTREAM.md for the pinned chokidar commit and every divergence from it.
 

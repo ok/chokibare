@@ -83,34 +83,13 @@ test(
   }
 )
 
-test(
-  'F4 a watch on a missing path neither throws nor errors nor fires (bare-fs#51 canary) → DV11',
-  bare,
-  async (t) => {
-    const dir = await tmp(t)
-    const missing = path.join(dir, 'does-not-exist')
-    let w
-    let threw = false
-    try {
-      w = fs.watch(missing)
-    } catch {
-      threw = true
-    }
-    if (threw) {
-      t.fail(
-        'bare-fs now throws on a missing path: holepunchto/bare-fs#51 is fixed — gate needsVerification() by version'
-      )
-      return
-    }
-    t.teardown(() => w.close())
-    const { events, errors } = record(w)
-    fs.mkdirSync(missing)
-    fs.writeFileSync(path.join(missing, 'a.txt'), '1')
-    await sleep(300)
-    t.is(events.length, 0, 'dead handle: nothing fires')
-    t.is(errors.length, 0, 'dead handle: no error')
-  }
-)
+test('F4 a watch on a missing path throws ENOENT (bare-fs#51, fixed in 4.8.2)', bare, async (t) => {
+  const dir = await tmp(t)
+  const missing = path.join(dir, 'does-not-exist')
+  // Before bare-fs 4.8.2 this returned a watcher that never fired and never errored (a dead
+  // handle); chokibare then verified every arm against the kernel. 4.8.2 throws like Node.
+  await t.exception(() => fs.watch(missing), /no such file or directory|ENOENT/)
+})
 
 test(
   'F5 a watcher on a removed directory stays open, does not error, reports the removal',
@@ -224,6 +203,31 @@ test(
     t.ok(
       events.every(([k]) => k === 'rename'),
       `kqueue NOTE_WRITE maps to rename: ${JSON.stringify(events)}`
+    )
+  }
+)
+
+test(
+  'F15 Windows: a change burst past the 4 KB ReadDirectoryChangesW buffer arrives as null filenames (bare-fs#52, fixed in 4.8.2)',
+  { skip: !isBare || !isWindows },
+  async (t) => {
+    const dir = await tmp(t)
+    const w = fs.watch(dir, { recursive: true })
+    t.teardown(() => w.close())
+    const { events, errors } = record(w)
+    await sleep(50)
+    // a tight synchronous loop: the watcher cannot drain the buffer until it ends
+    for (let i = 0; i < 5000; i++) fs.writeFileSync(path.join(dir, `f${i}.txt`), '')
+    await sleep(1500)
+    t.is(errors.length, 0, 'no error event')
+    t.ok(events.length > 0, `events delivered: ${events.length}`)
+    t.ok(
+      events.every(([, n]) => n === null || typeof n === 'string'),
+      'every filename is a string or null'
+    )
+    t.ok(
+      events.some(([, n]) => n === null),
+      `at least one null filename (${events.filter(([, n]) => n === null).length}): the lost-events signal`
     )
   }
 )

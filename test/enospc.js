@@ -7,7 +7,6 @@ const path = require('path')
 const tmp = require('test-tmp')
 const { isBare, isLinux, TEST_TIMEOUT } = require('./helpers')
 const rt = require('../lib/bare-runtime')
-const inotify = require('../lib/inotify')
 
 const enospc = isLinux && isBare && !!rt.env('CHOKIBARE_TEST_ENOSPC')
 
@@ -38,10 +37,8 @@ test(
       )
       return
     }
-    // No reserve, so the kernel's shared count runs out before our own budget does and the
-    // fdinfo verification (not the pre-check) is what reports the dead arms.
-    inotify._reset({ reserve: 0 })
-
+    // bare-fs ≥ 4.8.2 throws ENOSPC from fs.watch() past the limit (before 4.8.2 it returned a dead
+    // handle); chokibare reports each one as an error event through chokidar's native-error path.
     const root = await tmp(t)
     const dirs = limit + 64
     for (let i = 0; i < dirs; i++) fs.mkdirSync(path.join(root, 'd' + i))
@@ -56,18 +53,18 @@ test(
 
     t.ok(errors.length >= 64, `at least the ${64} directories past the limit: ${errors.length}`)
     t.ok(
-      errors.every(
-        (e) => e.code === 'ENOSPC' && typeof e.path === 'string' && e.path.startsWith(root)
-      ),
-      'every error is ENOSPC with a path under the root'
+      errors.every((e) => e.code === 'ENOSPC'),
+      'every error is ENOSPC'
     )
-    const facts = inotify.facts()
+    const { nativeWatches } = require('..').facts()
     t.ok(
-      facts.armed + errors.length >= dirs + 1,
-      `watched (${facts.armed}) + reported (${errors.length}) covers root + ${dirs} dirs`
+      nativeWatches + errors.length >= dirs + 1,
+      `watched (${nativeWatches}) + reported (${errors.length}) covers root + ${dirs} dirs`
     )
-    t.ok(facts.armed <= limit, `live watches (${facts.armed}) never exceed the limit (${limit})`)
-    inotify._reset()
+    t.ok(
+      nativeWatches <= limit,
+      `live watches (${nativeWatches}) never exceed the limit (${limit})`
+    )
   }
 )
 

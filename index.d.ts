@@ -157,10 +157,8 @@ export declare function watch(paths: string | string[], options?: ChokidarOption
 
 /**
  * chokibare only: process-wide counters for logging and tests. `nativeWatches` is the number of
- * shared native directory handles; `inotify` reports the Linux watch budget and how many arms the
- * kernel confirmed.
+ * shared native directory handles.
  */
 export declare function facts(): {
   nativeWatches: number
-  inotify: { armed: number; limit: number; reserve: number; verified: number }
 }

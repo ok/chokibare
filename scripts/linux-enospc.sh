@@ -4,7 +4,7 @@
 # The limits are kernel-global inside Docker Desktop's VM: never run this alongside another Linux test run.
 docker run --rm --privileged --platform linux/arm64 -v "$(cd "$(dirname "$0")/.." && pwd):/src:ro" -v chokibare-linux-nm:/w/node_modules node:22-slim sh -c '
 mkdir -p /w && tar --exclude=./node_modules -C /src -cf - . | tar -C /w -xf - && cd /w
-[ -x node_modules/.bin/brittle-bare ] || npm install --no-audit --no-fund --silent 2>&1 | tail -2
+npm install --no-audit --no-fund --silent 2>&1 | tail -2  # always: the cached volume must follow package.json
 W=/proc/sys/fs/inotify/max_user_watches; Q=/proc/sys/fs/inotify/max_queued_events
 ORIG_W=$(cat $W); ORIG_Q=$(cat $Q)
 echo "before: max_user_watches=$ORIG_W max_queued_events=$ORIG_Q"
