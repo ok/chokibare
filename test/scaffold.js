@@ -1,0 +1,16 @@
+const test = require('brittle')
+const rt = require('../lib/bare-runtime')
+
+test('scaffold: runtime shims load on this runtime', (t) => {
+  t.is(typeof rt.platform, 'string')
+  t.ok(['darwin', 'linux', 'win32'].includes(rt.platform), `platform ${rt.platform}`)
+  t.is(typeof rt.cwd(), 'string')
+  t.ok(rt.now() > 0)
+  t.is(rt.env('CHOKIBARE_SCAFFOLD_UNSET_' + rt.now()), undefined)
+  const flag = new rt.Flag()
+  t.is(flag.aborted, false)
+  flag.abort()
+  t.is(flag.aborted, true)
+  if (rt.isBare) t.is(typeof rt.bareFsVersion(), 'string')
+  else t.is(rt.bareFsVersion(), null)
+})

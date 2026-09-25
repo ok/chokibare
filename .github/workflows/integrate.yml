@@ -1,0 +1,50 @@
+name: Integrate
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    name: Security
+    steps:
+      - uses: holepunchto/actions/security-base@v1
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - uses: holepunchto/actions/node-base@v1
+      - run: npm run lint
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: darwin
+          - os: windows-latest
+            platform: win32
+    runs-on: ${{ matrix.os }}
+    name: Test / ${{ matrix.platform }}
+    steps:
+      - uses: holepunchto/actions/bare-base@v1
+      - run: npm test
+  inotify-limits:
+    runs-on: ubuntu-latest
+    name: Test / linux inotify limits
+    steps:
+      - uses: holepunchto/actions/bare-base@v1
+      # Lower the per-user watch limit to just above what the runner already holds, so a tree
+      # larger than the headroom must hit ENOSPC; the VM is ephemeral, nothing is restored.
+      - run: |
+          held=$(sudo sh -c 'cat /proc/*/fdinfo/* 2>/dev/null | grep -c "^inotify"')
+          sudo sysctl -w fs.inotify.max_user_watches=$((held + 1024))
+          sudo sysctl -w fs.inotify.max_queued_events=16
+      - run: CHOKIBARE_TEST_ENOSPC=1 CHOKIBARE_TEST_QOVERFLOW=1 npx brittle-bare test/enospc.js

@@ -1,0 +1,82 @@
+{
+  "name": "chokibare",
+  "version": "0.1.0",
+  "description": "A faithful port of chokidar to the Bare runtime",
+  "keywords": [
+    "chokidar",
+    "bare",
+    "watch",
+    "fs",
+    "watcher",
+    "file-watcher"
+  ],
+  "license": "MIT",
+  "author": "Oliver Kohl",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    "./package": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "imports": {
+    "events": {
+      "bare": "bare-events",
+      "default": "events"
+    },
+    "fs": {
+      "bare": "bare-fs",
+      "default": "fs"
+    },
+    "fs/promises": {
+      "bare": "bare-fs/promises",
+      "default": "fs/promises"
+    },
+    "os": {
+      "bare": "bare-os",
+      "default": "os"
+    },
+    "path": {
+      "bare": "bare-path",
+      "default": "path"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib",
+    "!lib/testing.js"
+  ],
+  "scripts": {
+    "postinstall": "node -e \"const fs=require('fs');const p='node_modules/.bin/bare';try{if(!fs.existsSync(p))fs.symlinkSync('../bare-runtime/bin/bare',p)}catch{}\"",
+    "format": "prettier --write . && lunte --fix",
+    "lint": "prettier --check . && lunte && node scripts/check-provenance.js",
+    "test": "npm run test:bare && npm run test:node",
+    "test:bare": "brittle-bare \"test/*.js\"",
+    "test:node": "brittle-node \"test/*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ok/chokibare.git"
+  },
+  "engines": {
+    "bare": ">=1.28.0",
+    "node": ">=22.22.0"
+  },
+  "dependencies": {
+    "bare-events": "^2.9.2",
+    "bare-fs": "^4.8.1",
+    "bare-os": "^3.9.3",
+    "bare-path": "^3.1.2"
+  },
+  "devDependencies": {
+    "bare-runtime": "^1.33.4",
+    "brittle": "^4.2.0",
+    "lunte": "^1.8.4",
+    "prettier": "^3.9.9",
+    "prettier-config-holepunch": "^2.0.0",
+    "test-tmp": "^1.4.0"
+  }
+}
