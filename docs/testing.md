@@ -41,6 +41,32 @@ On Linux under Bare the recursive-preferred label does not register (240 = 2 × 
 ignores the recursive flag there and bare-fs cannot report it, so chokibare pre-latches recursive
 as unsupported (DV11) and the harness's `canUseRecursiveWatch` says no.
 
+## CI (2026-09-25, `ok/chokibare`, `.github/workflows/integrate.yml`)
+
+| Job                                                                    | Result                                                              |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Test / linux (Node + Bare)                                             | green                                                               |
+| Test / linux inotify limits (`test/enospc.js` with the limits lowered) | green                                                               |
+| Test / win32 (Node + Bare)                                             | green: Bare 487/487, Node 487/487 — after two fixes, see below      |
+| Test / darwin (Node + Bare)                                            | green on one run of three; the failing runs each lost one Bare case |
+| Lint, Security                                                         | green                                                               |
+
+Windows needed two things the local runs could not show: the write-burst case is skipped under Bare
+there (a burst overflows libuv's 4 KB ReadDirectoryChangesW buffer, libuv passes a NULL filename and
+bare-fs crashes on it: bare-fs issue 2 in the reproduction repo), and watch paths are resolved with
+`realpathSync.native` on Node (the runner's temp directory is an 8.3 short name; libuv's fs-event
+assertion fires when the callback's long name does not share the watched spelling — the same
+assertion that has kept chokidar's own CI red).
+
+**Known runner flakes on darwin under Bare** (each once, on different runs; all pass locally ×3;
+both are verbatim upstream assertions with no macOS guard upstream either):
+
+- `fs.watch (non-polling) › watch individual files › should detect unlink and re-add`
+- `fs.watch (recursive preferred) › watch individual files › should detect safe-edit` (exact count
+  of three `change` events for three rename-over saves 300 ms apart)
+
+They are tracked here by name. A case that fails twice gets investigated, not re-run.
+
 ## Linux locally
 
 Docker is enough. `scripts/linux-run.sh` copies the checkout into a `node:22-slim` container with a
