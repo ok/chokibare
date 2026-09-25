@@ -1,4 +1,4 @@
-// chokibare original: lint step — every runtime source file states where it came from.
+// chokidar4bare original: lint step — every runtime source file states where it came from.
 'use strict'
 
 const fs = require('fs')
@@ -7,7 +7,7 @@ const path = require('path')
 const root = path.join(__dirname, '..')
 const DERIVED =
   /^\/\/ Derived from chokidar src\/[a-z0-9.-]+ @ [0-9a-f]{7} \(https:\/\/github\.com\/paulmillr\/chokidar, branch v6\)\.$/m
-const ORIGINAL = /^\/\/ chokibare original: .+$/m
+const ORIGINAL = /^\/\/ chokidar4bare original: .+$/m
 
 function sources() {
   const files = [path.join(root, 'index.js')]
@@ -34,7 +34,7 @@ if (failed) {
       '  // Derived from chokidar src/<file> @ 74adf65 (https://github.com/paulmillr/chokidar, branch v6).\n' +
       '  // MIT License. Copyright (c) 2012 Paul Miller (https://paulmillr.com), Elan Shanker.\n' +
       'or\n' +
-      '  // chokibare original: <one line saying what it is>'
+      '  // chokidar4bare original: <one line saying what it is>'
   )
   process.exit(1)
 }

@@ -1,5 +1,5 @@
 {
-  "name": "chokibare",
+  "name": "chokidar4bare",
   "version": "0.1.0",
   "description": "A faithful port of chokidar to the Bare runtime",
   "keywords": [
@@ -59,7 +59,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ok/chokibare.git"
+    "url": "git+https://github.com/ok/chokidar4bare.git"
   },
   "engines": {
     "bare": ">=1.28.0",

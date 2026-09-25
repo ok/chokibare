@@ -156,7 +156,7 @@ export declare class FSWatcher extends EventEmitter<FSWatcherEventMap> {
 export declare function watch(paths: string | string[], options?: ChokidarOptions): FSWatcher
 
 /**
- * chokibare only: process-wide counters for logging and tests. `nativeWatches` is the number of
+ * chokidar4bare only: process-wide counters for logging and tests. `nativeWatches` is the number of
  * shared native directory handles.
  */
 export declare function facts(): {

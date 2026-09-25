@@ -47,4 +47,4 @@ jobs:
           held=$(sudo sh -c 'cat /proc/*/fdinfo/* 2>/dev/null | grep -c "^inotify"')
           sudo sysctl -w fs.inotify.max_user_watches=$((held + 1024))
           sudo sysctl -w fs.inotify.max_queued_events=16
-      - run: CHOKIBARE_TEST_ENOSPC=1 CHOKIBARE_TEST_QOVERFLOW=1 npx brittle-bare test/enospc.js
+      - run: CHOKIDAR4BARE_TEST_ENOSPC=1 CHOKIDAR4BARE_TEST_QOVERFLOW=1 npx brittle-bare test/enospc.js

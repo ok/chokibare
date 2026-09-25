@@ -1,7 +1,7 @@
 #!/bin/sh
-# usage: scripts/linux-run.sh <mode: node|bare|both> <test files...>  — runs chokibare tests on Linux (arm64) in Docker
+# usage: scripts/linux-run.sh <mode: node|bare|both> <test files...>  — runs chokidar4bare tests on Linux (arm64) in Docker
 MODE=$1; shift
-docker run --rm --platform linux/arm64 -v "$(cd "$(dirname "$0")/.." && pwd):/src:ro" -v chokibare-linux-nm:/w/node_modules node:22-slim sh -c '
+docker run --rm --platform linux/arm64 -v "$(cd "$(dirname "$0")/.." && pwd):/src:ro" -v chokidar4bare-linux-nm:/w/node_modules node:22-slim sh -c '
 MODE=$1; shift
 mkdir -p /w && tar --exclude=./node_modules -C /src -cf - . | tar -C /w -xf - && cd /w
 npm install --no-audit --no-fund --silent 2>&1 | tail -2  # always: the cached volume must follow package.json

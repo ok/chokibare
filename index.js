@@ -716,7 +716,7 @@ function watch(paths, options = {}) {
   return watcher
 }
 
-// chokibare: process-wide facts for logging and tests. Not part of chokidar's API.
+// chokidar4bare: process-wide facts for logging and tests. Not part of chokidar's API.
 function facts() {
   return { nativeWatches: nativeResourceCountForTests() }
 }

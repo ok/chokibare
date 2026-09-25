@@ -1,9 +1,9 @@
 # Testing
 
-chokibare's suites are chokidar v6's own suites, ported to brittle. They are the executable
+chokidar4bare's suites are chokidar v6's own suites, ported to brittle. They are the executable
 specification of the port: `test/v6.js` (74 cases), `test/index.js` (the 119-case shared suite run
 under the native, recursive-preferred and owned-polling backends), `test/architecture.js` (7
-cases), plus chokibare's own `test/read-dir.js`, `test/inotify.js`, `test/enospc.js` and
+cases), plus chokidar4bare's own `test/read-dir.js`, `test/inotify.js`, `test/enospc.js` and
 `test/smoke.js`.
 
 ## The oracle
@@ -15,9 +15,9 @@ the same `fs.watch` upstream runs on. That makes upstream's suite a differential
 # 1. the ported tests against the upstream chokidar build they were ported from
 git clone https://github.com/paulmillr/chokidar ../chokidar-upstream
 git -C ../chokidar-upstream checkout --detach 74adf65 && (cd ../chokidar-upstream && npm ci && npm run build)
-CHOKIBARE_ORACLE=$PWD/../chokidar-upstream npx brittle-node "test/*.js"
+CHOKIDAR4BARE_ORACLE=$PWD/../chokidar-upstream npx brittle-node "test/*.js"
 
-# 2. the same tests against chokibare on Node — the numbers must match step 1
+# 2. the same tests against chokidar4bare on Node — the numbers must match step 1
 npx brittle-node "test/*.js"
 
 # 3. and under Bare
@@ -31,17 +31,17 @@ defences, and to cases marked `{ skip: isBare }` (they need `process.env`, `proc
 
 Recorded numbers (2026-09-25, macOS arm64, Node 24.19, Bare 1.33.4):
 
-| Suite                  | oracle (Node)      | chokibare (Node) | chokibare (Bare, macOS) | chokibare (Bare, Linux) |
-| ---------------------- | ------------------ | ---------------- | ----------------------- | ----------------------- |
-| `test/v6.js`           | 75/75, 268 asserts | 75/75, 268       | 75/75, 253              | 75/75, 246              |
-| `test/index.js`        | 359/359, 988       | 359/359, 988     | 359/359, 952            | 240/240, 641            |
-| `test/architecture.js` | 8/8, 35            | 8/8, 35          | 8/8, 35                 | 8/8, 35                 |
+| Suite                  | oracle (Node)      | chokidar4bare (Node) | chokidar4bare (Bare, macOS) | chokidar4bare (Bare, Linux) |
+| ---------------------- | ------------------ | -------------------- | --------------------------- | --------------------------- |
+| `test/v6.js`           | 75/75, 268 asserts | 75/75, 268           | 75/75, 253                  | 75/75, 246                  |
+| `test/index.js`        | 359/359, 988       | 359/359, 988         | 359/359, 952                | 240/240, 641                |
+| `test/architecture.js` | 8/8, 35            | 8/8, 35              | 8/8, 35                     | 8/8, 35                     |
 
 On Linux under Bare the recursive-preferred label does not register (240 = 2 × 119 + 2): libuv
-ignores the recursive flag there and bare-fs cannot report it, so chokibare pre-latches recursive
+ignores the recursive flag there and bare-fs cannot report it, so chokidar4bare pre-latches recursive
 as unsupported (DV11) and the harness's `canUseRecursiveWatch` says no.
 
-## CI (2026-09-25, `ok/chokibare`, `.github/workflows/integrate.yml`)
+## CI (2026-09-25, `ok/chokidar4bare`, `.github/workflows/integrate.yml`)
 
 | Job                                                                    | Result (run 36181023033, `4076026`, bare-fs 4.8.2)                          |
 | ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -84,7 +84,7 @@ alongside another Linux test run.
 
 ## Timing
 
-Tests wait on conditions, never on fixed sleeps; `CHOKIBARE_TEST_TIMEOUT_SCALE=2` stretches every
+Tests wait on conditions, never on fixed sleeps; `CHOKIDAR4BARE_TEST_TIMEOUT_SCALE=2` stretches every
 timeout on a slow machine. macOS FSEvents coalesces and duplicates events, so counts there are
 asserted only where upstream asserts them. brittle never bails: one flake fails one test, not the
 run.

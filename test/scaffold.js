@@ -6,7 +6,7 @@ test('scaffold: runtime shims load on this runtime', (t) => {
   t.ok(['darwin', 'linux', 'win32'].includes(rt.platform), `platform ${rt.platform}`)
   t.is(typeof rt.cwd(), 'string')
   t.ok(rt.now() > 0)
-  t.is(rt.env('CHOKIBARE_SCAFFOLD_UNSET_' + rt.now()), undefined)
+  t.is(rt.env('CHOKIDAR4BARE_SCAFFOLD_UNSET_' + rt.now()), undefined)
   const flag = new rt.Flag()
   t.is(flag.aborted, false)
   flag.abort()

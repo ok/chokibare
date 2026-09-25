@@ -1,6 +1,6 @@
-# chokibare
+# chokidar4bare
 
-**chokibare is a port of [chokidar](https://github.com/paulmillr/chokidar) to the
+**chokidar4bare is a port of [chokidar](https://github.com/paulmillr/chokidar) to the
 [Bare](https://github.com/holepunchto/bare) runtime. It copies chokidar as closely as we could.**
 
 We love and trust chokidar. It has watched files for most of the JavaScript ecosystem since 2012,
@@ -21,8 +21,8 @@ What is ours is limited to:
 - a short, numbered list of divergences, each one explained in UPSTREAM.md;
 - a deliberately narrow scope: only the features one application needs today.
 
-chokibare is an independent project. It is **not affiliated with or endorsed by chokidar or its
-maintainers**. Please report problems with chokibare here, not to chokidar. If you run on Node.js,
+chokidar4bare is an independent project. It is **not affiliated with or endorsed by chokidar or its
+maintainers**. Please report problems with chokidar4bare here, not to chokidar. If you run on Node.js,
 **use chokidar**.
 
 If chokidar has saved you time, please consider
@@ -31,11 +31,11 @@ If chokidar has saved you time, please consider
 ## Status
 
 0.1.0 — the first release. The port of chokidar v6 (`74adf65`) is complete; its own test suites
-pass against chokibare on macOS, Linux and Windows, under Bare and under Node (`docs/testing.md`
+pass against chokidar4bare on macOS, Linux and Windows, under Bare and under Node (`docs/testing.md`
 has the numbers). Two bare-fs defects that limited a watcher under Bare — a failed `fs.watch()` returning a dead
 handle ([bare-fs#51](https://github.com/holepunchto/bare-fs/issues/51)) and a crash on a burst of
 changes on Windows ([bare-fs#52](https://github.com/holepunchto/bare-fs/issues/52)) — were fixed
-in bare-fs 4.8.2, which chokibare requires. The reproductions live in
+in bare-fs 4.8.2, which chokidar4bare requires. The reproductions live in
 [ok/bare-fs-watch-repros](https://github.com/ok/bare-fs-watch-repros).
 
 See UPSTREAM.md for the pinned chokidar commit and every divergence from it.
@@ -52,7 +52,7 @@ The ported test suite can also be run against the upstream chokidar build it was
 which is how the port is verified:
 
 ```
-CHOKIBARE_ORACLE=/path/to/chokidar-upstream npx brittle-node "test/*.js"
+CHOKIDAR4BARE_ORACLE=/path/to/chokidar-upstream npx brittle-node "test/*.js"
 ```
 
 `docs/testing.md` explains the method, the recorded numbers per platform and runtime, and the

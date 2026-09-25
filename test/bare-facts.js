@@ -1,4 +1,4 @@
-// F-series: the bare-fs / libuv facts chokibare's defences rest on, pinned so an upstream change
+// F-series: the bare-fs / libuv facts chokidar4bare's defences rest on, pinned so an upstream change
 // fails here first (plan §8.4). Bare only; each case names the workaround it justifies.
 const test = require('brittle')
 const fs = require('fs')
@@ -87,7 +87,7 @@ test('F4 a watch on a missing path throws ENOENT (bare-fs#51, fixed in 4.8.2)', 
   const dir = await tmp(t)
   const missing = path.join(dir, 'does-not-exist')
   // Before bare-fs 4.8.2 this returned a watcher that never fired and never errored (a dead
-  // handle); chokibare then verified every arm against the kernel. 4.8.2 throws like Node.
+  // handle); chokidar4bare then verified every arm against the kernel. 4.8.2 throws like Node.
   await t.exception(() => fs.watch(missing), /no such file or directory|ENOENT/)
 })
 

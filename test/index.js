@@ -2996,7 +2996,7 @@ function registerSharedSuite(s, baseopts, label) {
       // The child imports the module under test: the oracle build, or this package's entry.
       const entry =
         h.source === 'oracle'
-          ? sp.join(rt.env('CHOKIBARE_ORACLE'), 'index.js')
+          ? sp.join(rt.env('CHOKIDAR4BARE_ORACLE'), 'index.js')
           : sp.join(__dirname, '..', 'index.js')
       const chokidarPath = rmSlashes(pathToFileURL(entry).href)
 

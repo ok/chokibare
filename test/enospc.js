@@ -8,7 +8,7 @@ const tmp = require('test-tmp')
 const { isBare, isLinux, TEST_TIMEOUT } = require('./helpers')
 const rt = require('../lib/bare-runtime')
 
-const enospc = isLinux && isBare && !!rt.env('CHOKIBARE_TEST_ENOSPC')
+const enospc = isLinux && isBare && !!rt.env('CHOKIDAR4BARE_TEST_ENOSPC')
 
 function until(cond, ms) {
   return new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ test(
       return
     }
     // bare-fs ≥ 4.8.2 throws ENOSPC from fs.watch() past the limit (before 4.8.2 it returned a dead
-    // handle); chokibare reports each one as an error event through chokidar's native-error path.
+    // handle); chokidar4bare reports each one as an error event through chokidar's native-error path.
     const root = await tmp(t)
     const dirs = limit + 64
     for (let i = 0; i < dirs; i++) fs.mkdirSync(path.join(root, 'd' + i))
@@ -70,7 +70,7 @@ test(
 
 test(
   'F12 queue overflow: a burst past max_queued_events is neither an event nor an error',
-  { skip: !enospc || !rt.env('CHOKIBARE_TEST_QOVERFLOW'), timeout: TEST_TIMEOUT },
+  { skip: !enospc || !rt.env('CHOKIDAR4BARE_TEST_QOVERFLOW'), timeout: TEST_TIMEOUT },
   async (t) => {
     const queued = Number(fs.readFileSync('/proc/sys/fs/inotify/max_queued_events', 'utf8'))
     t.ok(queued <= 64, `max_queued_events lowered for this run: ${queued}`)

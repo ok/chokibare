@@ -1,6 +1,6 @@
 // Test harness. Mirrors the helpers of chokidar src/index.test.ts and src/v6.test.ts @ 74adf65
 // (spies, waitFor, fixtures, VirtualScheduler) on top of brittle, and adds the oracle switch:
-// with CHOKIBARE_ORACLE set, the suites run against the upstream chokidar build they were ported
+// with CHOKIDAR4BARE_ORACLE set, the suites run against the upstream chokidar build they were ported
 // from, which is how the port is verified.
 'use strict'
 
@@ -16,25 +16,25 @@ const isBare = rt.isBare
 const isMacos = rt.platform === 'darwin'
 const isWindows = rt.platform === 'win32'
 const isLinux = rt.platform === 'linux'
-const isIBMi = false // upstream: os.type() === 'OS400'; never true where chokibare runs
+const isIBMi = false // upstream: os.type() === 'OS400'; never true where chokidar4bare runs
 
 function scale() {
-  const s = Number(rt.env('CHOKIBARE_TEST_TIMEOUT_SCALE'))
+  const s = Number(rt.env('CHOKIDAR4BARE_TEST_TIMEOUT_SCALE'))
   return s > 0 ? s : 1
 }
 
 const TEST_TIMEOUT = 32000 * scale() // ms, upstream index.test.ts:56
 
 // ---------------------------------------------------------------------------------------------
-// Module under test: chokibare, or the upstream chokidar build when CHOKIBARE_ORACLE is set.
+// Module under test: chokidar4bare, or the upstream chokidar build when CHOKIDAR4BARE_ORACLE is set.
 
-const ORACLE = rt.env('CHOKIBARE_ORACLE')
+const ORACLE = rt.env('CHOKIDAR4BARE_ORACLE')
 let loaded = null
 
 async function load() {
   if (loaded) return loaded
   if (ORACLE) {
-    if (isBare) throw new Error('CHOKIBARE_ORACLE: upstream chokidar runs on Node only')
+    if (isBare) throw new Error('CHOKIDAR4BARE_ORACLE: upstream chokidar runs on Node only')
     const { pathToFileURL } = require('url')
     const mod = (file) => import(pathToFileURL(path.join(ORACLE, file)).href)
     const [chokidar, runtime, testing] = await Promise.all([
@@ -45,7 +45,7 @@ async function load() {
     loaded = pack('oracle', chokidar, runtime, testing)
   } else {
     loaded = pack(
-      'chokibare',
+      'chokidar4bare',
       require('../..'),
       require('../../lib/runtime'),
       require('../../lib/testing')
@@ -218,7 +218,7 @@ function mkdir(dir, opts = {}) {
 function detectRecursiveWatch() {
   if (isIBMi) return false
   if (isBare) return !isLinux
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chokibare-recursive-probe-'))
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chokidar4bare-recursive-probe-'))
   try {
     const watcher = fs.watch(root, { recursive: true })
     watcher.close()
@@ -305,7 +305,7 @@ function context(t, testId, ctx, FIXTURES_PATH) {
 //   const s = suite(); s.test('name', async (t, h) => …); s.run()
 function suite() {
   const cases = []
-  const FIXTURES_PATH = path.join(os.tmpdir(), `chokibare-${time()}-${++suiteCount}`)
+  const FIXTURES_PATH = path.join(os.tmpdir(), `chokidar4bare-${time()}-${++suiteCount}`)
   return {
     test(title, opts, fn) {
       if (typeof opts === 'function') {

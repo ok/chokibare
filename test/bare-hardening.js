@@ -1,4 +1,4 @@
-// B-series (plan §8.3): what chokibare adds on top of chokidar v6's own suites — handle budgets,
+// B-series (plan §8.3): what chokidar4bare adds on top of chokidar v6's own suites — handle budgets,
 // the self-closing bare-fs watcher, path-length refusal — plus the mirall-shaped regressions the
 // port exists for. Runs on both runtimes through the public API; cases that need a runtime fact
 // are skipped where it does not hold.

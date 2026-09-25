@@ -6,7 +6,7 @@
 // backend.js/runtime.js/tree.js are chokidar's own internal modules: never re-exported through the
 // public API or through lib/testing.js's inspectWatcher/backendTesting seam, so this file loads them
 // directly, the same way test/helpers/index.js loads index.js/runtime.js/testing.js: from the
-// upstream oracle build under CHOKIBARE_ORACLE (Node only), or from chokibare's own lib/ otherwise.
+// upstream oracle build under CHOKIDAR4BARE_ORACLE (Node only), or from chokidar4bare's own lib/ otherwise.
 'use strict'
 
 const path = require('path')
@@ -15,18 +15,18 @@ const rt = require('../lib/bare-runtime')
 
 const s = suite()
 
-const ORACLE = rt.env('CHOKIBARE_ORACLE')
+const ORACLE = rt.env('CHOKIDAR4BARE_ORACLE')
 let internalsPromise = null
 
 function loadInternals() {
   if (!internalsPromise) {
-    internalsPromise = ORACLE ? loadOracleInternals() : loadChokibareInternals()
+    internalsPromise = ORACLE ? loadOracleInternals() : loadChokidar4bareInternals()
   }
   return internalsPromise
 }
 
 function loadOracleInternals() {
-  if (isBare) throw new Error('CHOKIBARE_ORACLE: upstream chokidar runs on Node only')
+  if (isBare) throw new Error('CHOKIDAR4BARE_ORACLE: upstream chokidar runs on Node only')
   const { pathToFileURL } = require('url')
   const mod = (file) => import(pathToFileURL(path.join(ORACLE, file)).href)
   return Promise.all([mod('backend.js'), mod('runtime.js'), mod('tree.js')]).then(
@@ -34,7 +34,7 @@ function loadOracleInternals() {
   )
 }
 
-function loadChokibareInternals() {
+function loadChokidar4bareInternals() {
   return Promise.resolve({
     backend: require('../lib/backend'),
     runtime: require('../lib/runtime'),
