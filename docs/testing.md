@@ -43,13 +43,13 @@ as unsupported (DV11) and the harness's `canUseRecursiveWatch` says no.
 
 ## CI (2026-09-25, `ok/chokibare`, `.github/workflows/integrate.yml`)
 
-| Job                                                                    | Result                                                              |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Test / linux (Node + Bare)                                             | green                                                               |
-| Test / linux inotify limits (`test/enospc.js` with the limits lowered) | green                                                               |
-| Test / win32 (Node + Bare)                                             | green: Bare 487/487, Node 487/487 — after two fixes, see below      |
-| Test / darwin (Node + Bare)                                            | green on one run of three; the failing runs each lost one Bare case |
-| Lint, Security                                                         | green                                                               |
+| Job                                                                    | Result (run 36181023033, `4076026`, bare-fs 4.8.2)                          |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Test / linux (Node + Bare)                                             | green                                                                       |
+| Test / linux inotify limits (`test/enospc.js` with the limits lowered) | green                                                                       |
+| Test / win32 (Node + Bare)                                             | green: Bare 478/478 (1,163 asserts), Node 478/478 — burst test and F15 live |
+| Test / darwin (Node + Bare)                                            | green: Bare 478/478 (1,316), Node 478/478                                   |
+| Lint, Security                                                         | green                                                                       |
 
 Windows needed two things the local runs could not show: bare-fs 4.8.2 (before it, a burst
 overflowed libuv's 4 KB ReadDirectoryChangesW buffer, libuv passed a NULL filename and bare-fs
