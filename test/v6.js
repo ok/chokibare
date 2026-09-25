@@ -33,7 +33,7 @@ s.test(
     const { chokidar, internals } = h
     const watcher = new chokidar.FSWatcher()
     h.WATCHERS.push(watcher)
-    const root = sp.parse(rt.cwd()).root
+    const root = sp.resolve(rt.cwd(), '/') // bare-path has no parse(); resolve keeps the drive on win32
     const addCalls = await internals(watcher).walkMissingRoot(root)
 
     t.is(addCalls, 1)
