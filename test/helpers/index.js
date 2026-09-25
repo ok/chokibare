@@ -241,9 +241,11 @@ const exec = isBare ? null : require('util').promisify(require('child_process').
 // any test runs, because creating them in beforeEach "increases chance of random failures"
 // (index.test.ts:2372-2384). A suite here registers its cases first and creates the pool once.
 
-const FIXTURES_PATH = path.join(os.tmpdir(), 'chokibare-' + time())
+// One root per suite: brittle may load every test file into one process, and each suite must own
+// the fixtures it prepares.
+let suiteCount = 0
 
-function prepareFixtures(count) {
+function prepareFixtures(FIXTURES_PATH, count) {
   fs.rmSync(FIXTURES_PATH, { recursive: true, force: true })
   fs.mkdirSync(FIXTURES_PATH, { recursive: true })
   for (let id = 1; id <= count; id++) {
@@ -256,7 +258,7 @@ function prepareFixtures(count) {
 
 // Per-test context: the equivalent of upstream's `testId`, `currentDir`, `dpath`, `cwatch`,
 // `WATCHERS` and its afterEach (close every watcher, remove the directory).
-function context(t, testId, ctx) {
+function context(t, testId, ctx, FIXTURES_PATH) {
   const currentDir = path.join(FIXTURES_PATH, String(testId))
   const WATCHERS = []
   const h = {
@@ -303,6 +305,7 @@ function context(t, testId, ctx) {
 //   const s = suite(); s.test('name', async (t, h) => …); s.run()
 function suite() {
   const cases = []
+  const FIXTURES_PATH = path.join(os.tmpdir(), `chokibare-${time()}-${++suiteCount}`)
   return {
     test(title, opts, fn) {
       if (typeof opts === 'function') {
@@ -312,11 +315,11 @@ function suite() {
       cases.push({ title, opts, fn, testId: cases.length + 1 })
     },
     run() {
-      prepareFixtures(cases.length)
+      prepareFixtures(FIXTURES_PATH, cases.length)
       for (const c of cases) {
         test(c.title, { timeout: TEST_TIMEOUT * 2, ...c.opts }, async (t) => {
           const ctx = await load()
-          const h = context(t, c.testId, ctx)
+          const h = context(t, c.testId, ctx, FIXTURES_PATH)
           try {
             await c.fn(t, h)
           } finally {
