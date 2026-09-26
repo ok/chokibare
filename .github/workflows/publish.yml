@@ -14,4 +14,15 @@ jobs:
     name: Publish
     steps:
       - uses: holepunchto/actions/node-base@v1
-      - uses: holepunchto/actions/publish@v1
+      # A tag for a version that is already on the registry (the first release was published by
+      # hand) must not fail the run: skip the publish instead of publishing over it.
+      - id: registry
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          if npm view "$name@$version" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "$name@$version is already published; nothing to do"
+          fi
+      - if: steps.registry.outputs.published != 'true'
+        uses: holepunchto/actions/publish@v1
